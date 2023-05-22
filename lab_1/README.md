@@ -4,7 +4,7 @@
 - leaf - n9k 9.3.3
 - host - cisco IOL L3
 
-![](L1.jpg)
+![](l1.jpg)
 
 ## Краткое описание
 
