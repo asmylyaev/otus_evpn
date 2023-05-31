@@ -7,8 +7,8 @@
 
 ## Статус настройки OSPF
 
-<code>
-dc-sp-01# sh ip ospf neighbor 
+
+<code>dc-sp-01# sh ip ospf neighbor 
 Neighbor ID     Instance VRF      Pri State                  Dead Time   Address         Interface
 3.3.3.1         1        default  1   FULL                   00:00:36    172.0.1.1       Ethernet1
 3.3.3.2         1        default  1   FULL                   00:00:36    172.0.1.3       Ethernet2
