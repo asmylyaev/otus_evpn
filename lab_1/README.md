@@ -14,4 +14,4 @@
 
 ## IP PLAN
 
-![](ip_plan.jpg)
+![](ip_plan.png)
