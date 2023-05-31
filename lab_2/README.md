@@ -1,6 +1,14 @@
 ## Цель
 Настроить OSPF для Underlay сети
 
+## Схема сети
+<details>
+<summary>тык</summary>
+
+![](l1.jpg)
+
+</details>
+
 ## IP PLAN
 <details>
 <summary>тык</summary>
