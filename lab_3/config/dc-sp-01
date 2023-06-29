@@ -1,0 +1,64 @@
+! Command: show running-config
+! device: dc-sp-01 (vEOS, EOS-4.25.3M)
+!
+! boot system flash:/vEOS-lab.swi
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname dc-sp-01
+!
+spanning-tree mode mstp
+!
+no aaa root
+!
+interface Ethernet1
+   no switchport
+   ip address 172.0.1.0/31
+   isis enable UNDERLAY
+   isis network point-to-point
+!
+interface Ethernet2
+   no switchport
+   ip address 172.0.1.2/31
+   isis enable UNDERLAY
+   isis network point-to-point
+!
+interface Ethernet3
+   no switchport
+   ip address 172.0.1.4/31
+   isis enable UNDERLAY
+   isis network point-to-point
+!
+interface Ethernet4
+   no switchport
+   ip address 172.0.1.6/31
+   isis enable UNDERLAY
+   isis network point-to-point
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback0
+   ip address 10.0.1.1/32
+   isis enable UNDERLAY
+!
+interface Management1
+!
+ip routing
+!
+ipv6 unicast-routing
+!
+router isis UNDERLAY
+   net 49.0001.0100.0000.1001.00
+   is-type level-2
+   !
+   address-family ipv4 unicast
+!
+end
