@@ -1,0 +1,62 @@
+! Command: show running-config
+! device: dc-sp-02 (vEOS, EOS-4.25.3M)
+!
+! boot system flash:/vEOS-lab.swi
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname dc-sp-02
+!
+spanning-tree mode mstp
+!
+no aaa root
+!
+interface Ethernet1
+   mtu 9212
+   no switchport
+   ip address 172.0.2.0/31
+!
+interface Ethernet2
+   mtu 9212
+   no switchport
+   ip address 172.0.2.2/31
+!
+interface Ethernet3
+   mtu 9212
+   no switchport
+   ip address 172.0.2.4/31
+!
+interface Ethernet4
+   mtu 9212
+   no switchport
+   ip address 172.0.2.6/31
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback0
+   ip address 10.0.2.1/32
+!
+interface Management1
+!
+ip routing
+!
+peer-filter AS_FILTER
+   10 match as-range 4200000001-4200000004 result accept
+!
+router bgp 4200000000
+   router-id 10.0.2.1
+   timers bgp 5 15
+   bgp listen range 172.0.2.0/29 peer-group LF peer-filter AS_FILTER
+   neighbor LF peer group
+   neighbor LF password 7 UaK1VdjUHJN+KpQSqQ1DwQ==
+   network 10.0.2.1/32
+!
+end
