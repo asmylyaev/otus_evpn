@@ -8,7 +8,7 @@
 <details>
 <summary>тык</summary>
 
-![](scheme.jpg)
+![](img/scheme.jpg)
 
 </details>
 
@@ -16,7 +16,7 @@
 <details>
 <summary>тык</summary>
 
-![](ip_plan.png)
+![](img/ip_plan.png)
 
 </details>
 
@@ -392,9 +392,9 @@ VLAN  Mac Address     Type      Prt  VTEP             Moves   Last Move
 
 #### Доступность между хостами 
 ping между растянутым VLAN 40 pod01-host-01->pod01-host-03
-![](ping_host01.png)
+![](img/ping_host01.png)
 
 ping между растянутым VLAN 50 pod01-host-02->pod01-host-04
 
-![](ping_host02.png)
+![](img/ping_host02.png)
 ### Полный конфиг устройств располагается в папке config
