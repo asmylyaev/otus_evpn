@@ -1,0 +1,95 @@
+pod01-lf-02#sh run
+! Command: show running-config
+! device: pod01-lf-02 (vEOS-lab, EOS-4.28.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname pod01-lf-02
+!
+spanning-tree mode mstp
+!
+vlan 50
+!
+interface Ethernet1
+   description pod01-sp-01
+   mtu 9212
+   no switchport
+   ip address 172.0.1.3/31
+!
+interface Ethernet2
+   description pod01-sp-02
+   mtu 9212
+   no switchport
+   ip address 172.0.2.3/31
+!
+interface Ethernet3
+   switchport access vlan 50
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback0
+   ip address 10.0.3.2/32
+!
+interface Loopback1
+   ip address 10.0.4.2/32
+!
+interface Management1
+!
+interface Vxlan1
+   vxlan source-interface Loopback1
+   vxlan udp-port 4789
+   vxlan vlan 50 vni 10050
+!
+ip routing
+!
+ip prefix-list LOOPBACKS seq 10 permit 10.0.3.0/24 le 32
+ip prefix-list LOOPBACKS seq 20 permit 10.0.4.0/24 le 32
+!
+route-map LOOPBACKS permit 10
+   match ip address prefix-list LOOPBACKS
+!
+router bgp 4200010002
+   router-id 10.0.3.2
+   timers bgp 5 15
+   maximum-paths 2
+   neighbor SP_OVERLAY peer group
+   neighbor SP_OVERLAY remote-as 4200010000
+   neighbor SP_OVERLAY update-source Loopback0
+   neighbor SP_OVERLAY ebgp-multihop 2
+   neighbor SP_OVERLAY password 7 YdbVB8Moi8lken9gwn18+w==
+   neighbor SP_OVERLAY send-community
+   neighbor SP_UNDERLAY peer group
+   neighbor SP_UNDERLAY remote-as 4200010000
+   neighbor SP_UNDERLAY password 7 vsD+HkqwiPzR55yWmhS9uQ==
+   neighbor 10.0.1.1 peer group SP_OVERLAY
+   neighbor 10.0.2.1 peer group SP_OVERLAY
+   neighbor 172.0.1.2 peer group SP_UNDERLAY
+   neighbor 172.0.2.2 peer group SP_UNDERLAY
+   redistribute connected route-map LOOPBACKS
+   !
+   vlan 50
+      rd 10.0.4.2:10050
+      route-target both 1:10050
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SP_OVERLAY activate
+   !
+   address-family ipv4
+      no neighbor SP_OVERLAY activate
+!
+end
