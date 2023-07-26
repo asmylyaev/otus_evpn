@@ -392,9 +392,9 @@ VLAN  Mac Address     Type      Prt  VTEP             Moves   Last Move
 
 #### Доступность между хостами 
 ping между растянутым VLAN 40 pod01-host-01->pod01-host-03
-![img.png](img/ping host01.png)
+![](img/ping_host01.png)
 
 ping между растянутым VLAN 50 pod01-host-02->pod01-host-04
 
-![img.png](img/ping host02.png)
+![](img/ping_host02.png)
 ### Полный конфиг устройств располагается в папке config
