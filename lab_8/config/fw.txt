@@ -1,0 +1,64 @@
+! device: fw (vEOS-lab, EOS-4.28.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname fw
+!
+spanning-tree mode mstp
+!
+vlan 10-11
+!
+interface Ethernet1
+   no switchport
+!
+interface Ethernet1.10
+   encapsulation dot1q vlan 10
+   ip address 172.0.3.1/31
+!
+interface Ethernet1.11
+   encapsulation dot1q vlan 11
+   ip address 172.0.4.1/31
+!
+interface Ethernet2
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback0
+   ip address 10.0.6.1/32
+!
+interface Loopback1
+   ip address 8.8.8.8/32
+!
+interface Management1
+!
+ip routing
+!
+router bgp 4200000006
+   router-id 10.0.6.1
+   timers bgp 5 15
+   neighbor BR_LF peer group
+   neighbor BR_LF remote-as 4200010005
+   neighbor BR_LF description borderlf
+   neighbor BR_LF password 7 5LkcrMZCcy/XOJae5KiDPA==
+   neighbor 172.0.3.0 peer group BR_LF
+   neighbor 172.0.4.0 peer group BR_LF
+   network 8.8.8.8/32
+   aggregate-address 8.0.0.0/8 summary-only
+!
+end

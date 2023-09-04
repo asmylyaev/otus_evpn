@@ -1,0 +1,84 @@
+! device: pod01-sp-01 (vEOS-lab, EOS-4.28.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname pod01-sp-01
+!
+spanning-tree mode mstp
+!
+interface Ethernet1
+   mtu 9212
+   no switchport
+   ip address 172.0.1.0/31
+!
+interface Ethernet2
+   mtu 9212
+   no switchport
+   ip address 172.0.1.2/31
+!
+interface Ethernet3
+   mtu 9212
+   no switchport
+   ip address 172.0.1.4/31
+!
+interface Ethernet4
+   mtu 9212
+   no switchport
+   ip address 172.0.1.6/31
+!
+interface Ethernet5
+   description p2p-to-borderlf
+   mtu 9212
+   no switchport
+   ip address 172.0.1.8/31
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Ethernet9
+!
+interface Loopback0
+   ip address 10.0.1.1/32
+!
+interface Management1
+!
+ip routing
+!
+ip prefix-list LOOPBACKS seq 10 permit 10.0.1.0/24 le 32
+!
+route-map LOOPBACKS permit 10
+   match ip address prefix-list LOOPBACKS
+!
+peer-filter AS_FILTER
+   10 match as-range 4200010001-4200010005 result accept
+!
+router bgp 4200010000
+   router-id 10.0.1.1
+   timers bgp 5 15
+   bgp listen range 10.0.0.0/16 peer-group LF_OVERLAY peer-filter AS_FILTER
+   bgp listen range 172.0.1.0/26 peer-group LF_UNDERLAY peer-filter AS_FILTER
+   neighbor LF_OVERLAY peer group
+   neighbor LF_OVERLAY update-source Loopback0
+   neighbor LF_OVERLAY ebgp-multihop 2
+   neighbor LF_OVERLAY password 7 PJF2jC5W/bZVMrBToHX0sA==
+   neighbor LF_OVERLAY send-community
+   neighbor LF_UNDERLAY peer group
+   neighbor LF_UNDERLAY password 7 MfA8KHrQWc19gzI6EW4TNg==
+   redistribute connected route-map LOOPBACKS
+   !
+   address-family evpn
+      neighbor LF_OVERLAY activate
+   !
+   address-family ipv4
+      no neighbor LF_OVERLAY activate
+!
+end

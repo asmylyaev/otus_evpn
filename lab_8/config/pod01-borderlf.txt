@@ -1,0 +1,143 @@
+! device: pod01-borderlf (vEOS-lab, EOS-4.28.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname pod01-borderlf
+!
+spanning-tree mode mstp
+!
+vlan 10-11,40,50
+!
+vrf instance clientA
+!
+vrf instance clientB
+!
+interface Ethernet1
+   description p2p-to-sp-01
+   mtu 9212
+   no switchport
+   ip address 172.0.1.9/31
+!
+interface Ethernet2
+   description p2p-to-sp-02
+   mtu 9212
+   no switchport
+   ip address 172.0.2.9/31
+!
+interface Ethernet3
+   no switchport
+!
+interface Ethernet3.10
+   encapsulation dot1q vlan 10
+   vrf clientA
+   ip address 172.0.3.0/31
+!
+interface Ethernet3.11
+   encapsulation dot1q vlan 11
+   vrf clientB
+   ip address 172.0.4.0/31
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+   switchport mode trunk
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback0
+   ip address 10.0.5.1/32
+!
+interface Loopback1
+   ip address 10.0.5.2/32
+!
+interface Management1
+!
+interface Vlan40
+   vrf clientA
+   ip address virtual 192.168.40.254/24
+!
+interface Vlan50
+   vrf clientB
+   ip address virtual 192.168.50.254/24
+!
+interface Vxlan1
+   vxlan source-interface Loopback1
+   vxlan udp-port 4789
+   vxlan vrf clientA vni 40
+   vxlan vrf clientB vni 50
+!
+ip routing
+ip routing vrf clientA
+ip routing vrf clientB
+!
+ip prefix-list CLENTS seq 10 permit 192.168.0.0/16 le 32
+ip prefix-list LOOPBACKS seq 10 permit 10.0.5.0/24 le 32
+!
+route-map CLENTS permit 10
+   match ip address prefix-list CLENTS
+!
+route-map LOOPBACKS permit 10
+   match ip address prefix-list LOOPBACKS
+!
+router bgp 4200010005
+   router-id 10.0.5.1
+   timers bgp 5 15
+   maximum-paths 2
+   neighbor SP_OVERLAY peer group
+   neighbor SP_OVERLAY remote-as 4200010000
+   neighbor SP_OVERLAY update-source Loopback0
+   neighbor SP_OVERLAY ebgp-multihop 2
+   neighbor SP_OVERLAY password 7 YdbVB8Moi8lken9gwn18+w==
+   neighbor SP_OVERLAY send-community
+   neighbor SP_UNDERLAY peer group
+   neighbor SP_UNDERLAY remote-as 4200010000
+   neighbor SP_UNDERLAY password 7 vsD+HkqwiPzR55yWmhS9uQ==
+   neighbor 10.0.1.1 peer group SP_OVERLAY
+   neighbor 10.0.2.1 peer group SP_OVERLAY
+   neighbor 172.0.1.8 peer group SP_UNDERLAY
+   neighbor 172.0.1.8 description sp-01
+   neighbor 172.0.2.8 peer group SP_UNDERLAY
+   neighbor 172.0.2.8 description sp-02
+   redistribute connected route-map LOOPBACKS
+   !
+   address-family evpn
+      neighbor SP_OVERLAY activate
+   !
+   address-family ipv4
+      no neighbor SP_OVERLAY activate
+   !
+   vrf clientA
+      rd 10.0.5.1:40
+      route-target import evpn 40:40
+      route-target export evpn 40:40
+      router-id 10.0.5.1
+      neighbor 172.0.3.1 remote-as 4200000006
+      neighbor 172.0.3.1 description fw
+      neighbor 172.0.3.1 allowas-in 1
+      neighbor 172.0.3.1 password 7 m8bSAtIoYtjqqYF7IY3wKA==
+      aggregate-address 192.168.40.0/24 summary-only
+      redistribute connected route-map CLENTS
+   !
+   vrf clientB
+      rd 10.0.5.1:50
+      route-target import evpn 50:50
+      route-target export evpn 50:50
+      router-id 10.0.5.1
+      neighbor 172.0.4.1 remote-as 4200000006
+      neighbor 172.0.4.1 description fw
+      neighbor 172.0.4.1 allowas-in 1
+      neighbor 172.0.4.1 password 7 fvZOoIEPvTXoSDdmZNA+rg==
+      aggregate-address 192.168.50.0/24 summary-only
+      redistribute connected route-map CLENTS
+!
+end
