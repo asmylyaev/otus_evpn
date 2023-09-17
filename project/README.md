@@ -386,22 +386,21 @@ router bgp 4201020001
 
 ## Проверка связоности по UNDERLAY
 
-Super spine со всеми spine 
+Super spine со всеми spine
 
-![](img/ssp under bgp sum.png)
+![](img/ssp-under-bgp-sum.png)
 
 Spine
 
-![](img/sp under bgp sum.png)
+![](img/sp-under-bgp-sum.png)
 
-![](img/sp under bgp sum pod2.png)
+![](img/sp-under-bgp-sum-pod2.png)
 
 LEAF
 
-![](img/lf under bgp sum.png)
+![](img/lf-under-bgp-sum.png)
 
-![](img/lf under bgp sum pod2.png)
-
+![](img/lf-under-bgp-sum-pod2.png)
 
 # Настройка Overlay
 
@@ -487,11 +486,9 @@ router bgp 4201010001
 
 ## Проверка связоности по OVERLAY
 
-![](img/lf over bgp sum.png)
+![](img/lf-over-bgp-sum.png)
 
-
-![](img/lf over bgp sum pod2.png)
-
+![](img/lf-over-bgp-sum-pod2.png)
 
 # Настройка L3VPN и необходимые настройки для хостов
 
@@ -665,6 +662,7 @@ interface Vxlan1
 ## Проверка связоности по L3VPN
 
 POD01
+
 **pod01-lf-01**
 
 ![](img/l3vpn-lf1-pod01.png)
