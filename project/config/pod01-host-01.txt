@@ -1,6 +1,8 @@
+Building configuration...
 
+Current configuration : 1898 bytes
 !
-! Last configuration change at 13:25:44 UTC Sat Sep 16 2023
+! Last configuration change at 14:45:02 UTC Sun Sep 17 2023
 !
 version 15.2
 service timestamps debug datetime msec
@@ -33,7 +35,7 @@ spanning-tree mode pvst
 spanning-tree extend system-id
 !
 !
-! 
+!
 !
 !
 !
@@ -47,44 +49,34 @@ spanning-tree extend system-id
 !
 !
 interface Loopback0
- no shutdown
  ip address 10.99.99.1 255.255.255.255
 !
 interface Loopback1
- no shutdown
  ip address 8.8.8.8 255.255.255.255
 !
 interface Port-channel1
- no shutdown
  switchport trunk allowed vlan 40
  switchport trunk encapsulation dot1q
  switchport mode trunk
 !
 interface Ethernet0/0
- no shutdown
  switchport trunk allowed vlan 40
  switchport trunk encapsulation dot1q
  switchport mode trunk
+ channel-group 1 mode active
 !
 interface Ethernet0/1
- no shutdown
- switchport trunk allowed vlan 50
+ switchport trunk allowed vlan 40
  switchport trunk encapsulation dot1q
  switchport mode trunk
+ channel-group 1 mode active
 !
 interface Ethernet0/2
- no shutdown
 !
 interface Ethernet0/3
- no shutdown
 !
 interface Vlan40
- no shutdown
- ip address 192.168.40.1 255.255.255.252
-!
-interface Vlan50
- no shutdown
- ip address 192.168.50.1 255.255.255.252
+ ip address 192.168.40.1 255.255.255.248
 !
 router bgp 65001
  bgp router-id 10.99.99.1
@@ -95,9 +87,9 @@ router bgp 65001
  neighbor 192.168.40.2 remote-as 4201010001
  neighbor 192.168.40.2 password cisco123
  neighbor 192.168.40.2 route-map OUT out
- neighbor 192.168.50.2 remote-as 4201010002
- neighbor 192.168.50.2 password cisco123
- neighbor 192.168.50.2 route-map OUT out
+ neighbor 192.168.40.3 remote-as 4201010002
+ neighbor 192.168.40.3 password cisco123
+ neighbor 192.168.40.3 route-map OUT out
  maximum-paths 2
 !
 ip forward-protocol nd

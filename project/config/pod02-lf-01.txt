@@ -1,3 +1,4 @@
+! Command: show running-config
 ! device: pod02-lf-01 (vEOS-lab, EOS-4.28.1F)
 !
 ! boot system flash:/vEOS-lab.swi
@@ -17,12 +18,6 @@ vlan 40
 vrf instance A
 !
 interface Port-Channel1
-   switchport trunk allowed vlan 40
-   switchport mode trunk
-   !
-   evpn ethernet-segment
-      identifier 0000:0000:0001:0002:0000
-      route-target import 00:00:00:01:00:02
    lacp system-id 0000.0002.0001
 !
 interface Ethernet1
@@ -67,8 +62,6 @@ interface Vxlan1
    vxlan source-interface Loopback1
    vxlan udp-port 4789
    vxlan vrf A vni 10101
-!
-ip virtual-router mac-address 00:00:00:00:02:01
 !
 ip routing
 ip routing vrf A

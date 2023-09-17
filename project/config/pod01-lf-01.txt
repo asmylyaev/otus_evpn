@@ -77,8 +77,6 @@ interface Vxlan1
    vxlan vlan 40 vni 10040
    vxlan vrf A vni 10101
 !
-ip virtual-router mac-address 00:00:00:00:01:01
-!
 ip routing
 ip routing vrf A
 !
