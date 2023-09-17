@@ -387,14 +387,17 @@ router bgp 4201020001
 ## Проверка связоности по UNDERLAY
 
 Super spine со всеми spine 
+
 ![](img/ssp under bgp sum.png)
 
 Spine
+
 ![](img/sp under bgp sum.png)
 
 ![](img/sp under bgp sum pod2.png)
 
 LEAF
+
 ![](img/lf under bgp sum.png)
 
 ![](img/lf under bgp sum pod2.png)
@@ -663,9 +666,11 @@ interface Vxlan1
 
 POD01
 **pod01-lf-01**
+
 ![](img/l3vpn-lf1-pod01.png)
 
 **pod01-host-01**
+
 ![](img/l3vpn-host1-pod01.png)
 
 POD02
@@ -675,6 +680,7 @@ POD02
 ![](img/l3vpn-lf1-pod02.png)
 
 **pod02-host-01**
+
 ![](img/l3vpn-host1-pod02.png)
 
 
