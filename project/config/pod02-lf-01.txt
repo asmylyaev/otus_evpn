@@ -1,0 +1,114 @@
+! device: pod02-lf-01 (vEOS-lab, EOS-4.28.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname pod02-lf-01
+!
+spanning-tree mode mstp
+!
+vlan 40
+!
+vrf instance A
+!
+interface Port-Channel1
+   switchport trunk allowed vlan 40
+   switchport mode trunk
+   !
+   evpn ethernet-segment
+      identifier 0000:0000:0001:0002:0000
+      route-target import 00:00:00:01:00:02
+   lacp system-id 0000.0002.0001
+!
+interface Ethernet1
+   description p2p-to-sp01
+   mtu 9212
+   no switchport
+   ip address 172.2.1.1/31
+!
+interface Ethernet2
+   description p2p-to-sp02
+   mtu 9212
+   no switchport
+   ip address 172.2.2.1/31
+!
+interface Ethernet3
+   switchport trunk allowed vlan 40
+   switchport mode trunk
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback0
+   ip address 10.2.0.1/32
+!
+interface Loopback1
+   ip address 10.254.2.1/32
+!
+interface Management1
+!
+interface Vlan40
+   vrf A
+   ip address 192.168.40.6/30
+!
+interface Vxlan1
+   vxlan source-interface Loopback1
+   vxlan udp-port 4789
+   vxlan vrf A vni 10101
+!
+ip virtual-router mac-address 00:00:00:00:02:01
+!
+ip routing
+ip routing vrf A
+!
+ip prefix-list LOOPBACKS seq 10 permit 10.2.0.0/24 le 32
+ip prefix-list LOOPBACKS seq 20 permit 10.254.2.0/25 le 32
+!
+route-map LOOPBACKS permit 10
+   match ip address prefix-list LOOPBACKS
+!
+router bgp 4201020001
+   router-id 10.2.0.1
+   timers bgp 5 15
+   maximum-paths 2
+   neighbor SP_UNDERLAY peer group
+   neighbor SP_UNDERLAY remote-as 4201020000
+   neighbor SP_UNDERLAY password 7 vsD+HkqwiPzR55yWmhS9uQ==
+   neighbor SSP_OVERLAY peer group
+   neighbor SSP_OVERLAY remote-as 4201000000
+   neighbor SSP_OVERLAY update-source Loopback0
+   neighbor SSP_OVERLAY ebgp-multihop 2
+   neighbor SSP_OVERLAY password 7 TNJF2j6ngsK7fyctq5tj2w==
+   neighbor SSP_OVERLAY send-community
+   neighbor 10.0.0.250 peer group SSP_OVERLAY
+   neighbor 10.0.0.251 peer group SSP_OVERLAY
+   neighbor 172.2.1.0 peer group SP_UNDERLAY
+   neighbor 172.2.2.0 peer group SP_UNDERLAY
+   redistribute connected route-map LOOPBACKS
+   !
+   address-family evpn
+      neighbor SSP_OVERLAY activate
+   !
+   address-family ipv4
+      no neighbor SSP_OVERLAY activate
+   !
+   vrf A
+      rd 10.2.0.1:1
+      route-target import evpn 1:10101
+      route-target export evpn 1:10101
+      neighbor 192.168.40.5 remote-as 65002
+      neighbor 192.168.40.5 password 7 TpAoFj60w2+Vs/kDELyYFQ==
+!
+end
